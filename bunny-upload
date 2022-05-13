@@ -1,0 +1,36 @@
+#!/bin/bash -e
+set -e
+RED='\033[0;31m'
+NOCOLOR='\033[0m' 
+LOCALFILE="${1:?Must provide local filename}"
+REMOTEFILE="${2:-${1}}"
+URL="${BUNNY_ENDPOINT}/${REMOTEFILE}"
+METHOD="PUT"
+CONTENT_TYPE="$(file --mime-type -b ${LOCALFILE})"
+# Computing the checksum requires sha256sum
+# the sha256sum output must be clipped to the first field
+# and translated from lower case to upper case for compatibility with bunnynet
+LCHECKSUM=$(sha256sum ${LOCALFILE} | cut -d ' ' -f 1 )
+CHECKSUM=$(echo $LCHECKSUM | tr '[:lower:]' '[:upper:]')
+echo $LCHECKSUM ${LOCALFILE} ${REMOTEFILE} 
+RESULT=$(curl --silent --request ${METHOD} \
+     --url "${URL}" \
+     --header "AccessKey: ${BUNNY_RW}" \
+     --header "Content-Type: ${CONTENT_TYPE}" \
+     --header "Checksum: ${CHECKSUM}" \
+     --upload-file "$LOCALFILE")
+HTTPCODE=$(echo $RESULT | jq -r .HttpCode)
+MESSAGE=$(echo $RESULT | jq -r .Message)
+if [[ $HTTPCODE == 2* ]]
+then
+    echo $MESSAGE
+    exit 0;
+else
+    echo -e $RED HTTP $HTTPCODE $NOCOLOR from $METHOD $URL
+    echo -e $RED $MESSAGE $NOCOLOR
+    exit $HTTPCODE
+fi
+
+
+
+

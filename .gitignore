@@ -1,0 +1,7 @@
+*~
+bunny-auth*
+*.auth
+*.key
+*.keys
+*auth*
+*key*

@@ -1,0 +1,14 @@
+#!/bin/bash -e
+set -e
+REMOTEFILE="${1:?Must provide remote filename}"
+URL="${BUNNY_ENDPOINT}/${REMOTEFILE}"
+METHOD="GET"
+curl --silent --fail --show-error --request ${METHOD} \
+     --url "${URL}" \
+     --header 'Accept: */*' \
+     --header "AccessKey: ${BUNNY_RO}" 
+
+
+
+
+

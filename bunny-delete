@@ -1,0 +1,15 @@
+#!/bin/bash -e
+set -e
+REMOTEFILE="${1:?Must provide remote filename}"
+URL="${BUNNY_ENDPOINT}/${REMOTEFILE}"
+METHOD="DELETE"
+curl --silent --fail --show-error --request ${METHOD} \
+     --url "${URL}" \
+     --header "AccessKey: ${BUNNY_RW}" \
+     | jq -r .Message
+
+
+
+
+
+

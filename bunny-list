@@ -1,0 +1,15 @@
+#!/bin/bash -e
+set -e
+REMOTEDIR=$1
+URL="${BUNNY_ENDPOINT}/${REMOTEDIR}/"
+METHOD="GET"
+curl --silent --fail --show-error --request ${METHOD} \
+     --url "${URL}" \
+     --header 'Accept: */*' \
+     --header "AccessKey: ${BUNNY_RO}" \
+     | jq .
+
+
+
+
+
