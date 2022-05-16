@@ -1,0 +1,14 @@
+#!/bin/bash
+URL="${BUNNY_ENDPOINT}/"
+METHOD="DELETE"
+curl --silent --request ${METHOD} \
+     --url "${URL}" \
+     --header "AccessKey: ${BUNNY_RW}" \
+     | jq -r .Message
+exit 0
+
+
+
+
+
+
